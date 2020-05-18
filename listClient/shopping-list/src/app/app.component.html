@@ -1,0 +1,25 @@
+<div class="ui huge secondary pointing menu">
+  <div class="ui container">
+      <div class="item">
+          <img class="ui mini image" src="../assets/images/kwm-gegen-corona-logo.png">
+      </div>
+      <a *ngIf="isLoggedOut()" routerLink="home" routerLinkActive="active" class="item">
+          Home
+      </a>
+      <a *ngIf="isLoggedIn()" routerLink="lists" routerLinkActive="active" class="item">
+          Alle Listen
+      </a>
+      <a *ngIf="isLoggedIn()" routerLink="my-lists" routerLinkActive="active" class="item">
+          Meine Listen
+      </a>
+      <div class="right menu">
+          <a *ngIf="isLoggedIn()" (click)="logout()" class="ui item">
+              {{getLoginLabel()}}
+          </a>
+          <a *ngIf="isLoggedOut()" routerLink="login" class="ui item">
+              {{getLoginLabel()}}
+          </a>
+      </div>
+    </div>
+</div>
+<router-outlet></router-outlet>

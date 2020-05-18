@@ -1,0 +1,20 @@
+<div class="ui container">
+    <h1 class="ui header">Meine Listen</h1>
+    <div class="ui two column grid">
+        <div *ngIf="authService.getCurrentUserRole()==0" class="new-button column">
+            <button routerLink="../newList" class="ui fluid grey button">
+                <i class="plus icon"></i>
+                Neue Liste hinzufügen
+            </button>
+        </div>
+    </div>
+    <div class="ui attached middle aligned selection divided list">
+        <a *ngFor="let list of lists" class="item bs-shopping-list-list-item"
+           [list]="list">
+        </a>
+        <div *ngIf="!lists" class="ui active dimmer">
+            <div class="ui large text loader">Daten werden geladen...</div>
+        </div>
+        <p *ngIf="lists && !lists.length">Es wurden noch keine Listen eingetragen.</p>
+    </div>
+</div>

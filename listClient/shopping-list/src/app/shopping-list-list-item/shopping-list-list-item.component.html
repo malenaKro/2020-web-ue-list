@@ -1,0 +1,20 @@
+<div class="content">
+    <div class="list-info left floated">
+        <h2 class="ui header">
+            Liste von {{list.creator.firstname}} {{list.creator.lastname}}
+            <div *ngIf="list.volunteer_id != null && list.final_sum != null" class="ui medium green basic label">Erledigt</div>
+            <div *ngIf="list.volunteer_id != null && list.final_sum == null" class="ui medium yellow basic label">Übernommen</div>
+            <div *ngIf="list.volunteer_id == null && list.final_sum == null" class="ui medium red basic label">Offen</div>
+        </h2>
+        <div class="description">
+            <span>Ort: {{list.creator.addresses[0].postcode}} {{list.creator.addresses[0].location}}</span><br>
+            <span>Fällig am: {{list.due_date}}</span>
+        </div>
+    </div>
+    <div class="detail-button-container right floated">
+        <button [routerLink]="['../list', list.id]" class="ui button">
+            Details anzeigen
+            <i class="chevron right icon"></i>
+        </button>
+    </div>
+</div>

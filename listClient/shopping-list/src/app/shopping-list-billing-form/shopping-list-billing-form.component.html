@@ -1,0 +1,44 @@
+<div *ngIf="list" class="ui container">
+    <div class="back-button eight wide column">
+        <button [routerLink]="['/list', list?.id]" class="ui button"><i class="chevron left icon"></i>Zurück zur Liste</button>
+    </div>
+    <h1>Endsumme für die Liste von {{list.creator.firstname}} {{list.creator.lastname}}</h1>
+    <div class="ui vertical segment">
+        <h3 class="ui header">Übersicht Artikel</h3>
+
+        <table class="ui very basic table">
+            <thead>
+            <tr>
+                <th class="six wide">Bezeichnung</th>
+                <th class="three wide">Menge</th>
+                <th class="three wide">Max. Preis</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of list.items">
+                <td>{{item.name}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.max_price}}€</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form class="ui large form" [formGroup]="billingForm" (ngSubmit)="submitForm()">
+        <div class="fields ui grid">
+            <div class="required inline field sixteen wide column">
+                <label>Endsumme: </label>
+                <input type="number" formControlName="final_sum" placeholder="12.34">€
+                <div *ngIf="errors.final_sum" class="ui negative message">{{errors.final_sum}}</div>
+            </div>
+            <div class="required inline field sixteen wide column">
+                <div class="ui checkbox">
+                    <input type="checkbox" formControlName="legal_notice" >
+                    <label>Ich bin mir bewusst, dass eine Falschangabe Konsequenzen haben wird.</label>
+                    <div *ngIf="errors.legal_notice" class="ui negative message">{{errors.legal_notice}}</div>
+                </div>
+            </div>
+            <button class="three wide column" type="submit" class="ui button"
+                    [disabled]="billingForm.invalid">Senden</button>
+        </div>
+    </form>
+</div>

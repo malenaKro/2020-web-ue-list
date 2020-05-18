@@ -1,0 +1,10 @@
+<form class="ui large form" [formGroup]="commentForm" (ngSubmit)="submitForm()">
+    <div class="inline fields">
+        <div class="fifteen wide field">
+            <input type="text" formControlName="feedback_text" placeholder="Kommentieren...">
+            <div *ngIf="errors.feedback_text" class="ui negative message">{{errors.feedback_text }}</div>
+        </div>
+        <button type="submit" class="ui button"
+                [disabled]="commentForm.invalid">Senden</button>
+    </div>
+</form>

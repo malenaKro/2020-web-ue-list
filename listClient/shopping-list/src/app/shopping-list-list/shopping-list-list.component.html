@@ -1,0 +1,26 @@
+<div class="ui container">
+    <h1 class="ui header">Alle Listen</h1>
+    <div *ngIf="authService.isLoggedIn()" class="ui two column grid">
+        <div *ngIf="authService.getCurrentUserRole()==0" class="new-button column">
+            <button routerLink="../newList" class="ui fluid grey button">
+                <i class="plus icon"></i>
+                Neue Liste hinzufügen
+            </button>
+        </div>
+        <div class="my-lists-button column">
+            <button routerLink="../my-lists" class="ui fluid button">
+                <i class="list icon"></i>
+                Meine Listen anzeigen
+            </button>
+        </div>
+    </div>
+    <div class="ui attached middle aligned selection divided list">
+        <a *ngFor="let list of lists" class="item bs-shopping-list-list-item"
+           [list]="list">
+        </a>
+        <div *ngIf="!lists" class="ui active dimmer">
+            <div class="ui large text loader">Daten werden geladen...</div>
+        </div>
+        <p *ngIf="lists && !lists.length">Es wurden noch keine Listen eingetragen.</p>
+    </div>
+</div>

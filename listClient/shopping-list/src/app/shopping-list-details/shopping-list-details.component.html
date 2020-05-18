@@ -1,0 +1,89 @@
+<div class="ui container">
+    <div *ngIf="list" class="ui grid">
+        <div class="back-button eight wide column">
+            <button [routerLink]="'/lists'" class="ui button"><i class="chevron left icon"></i>Zurück zur Übersicht</button>
+        </div>
+        <!-- check role of logged in user-->
+        <div *ngIf="authService.isLoggedIn()" class="user-related-buttons right floated right aligned eight wide column">
+            <!-- role = 0 -->
+            <div *ngIf="list.volunteer_id == undefined && authService.getCurrentUserRole() == 0 && authService.getCurrentUserId() == list.creator_id" class="creator-buttons">
+                <button (click)="deleteShoppingList()" class="ui red button"><i class="remove icon"></i> Liste löschen</button>
+                <button [routerLink]="['../../editList', list?.id]" class="ui button"><i class="edit icon"></i> Liste bearbeiten</button>
+            </div>
+            <!-- role = 1 -->
+            <div *ngIf="list.volunteer_id == undefined && authService.getCurrentUserRole() == 1" class="volunteer-buttons">
+                <button (click)="volunteerForList()" class="ui button"><i class="check icon"></i> Liste übernehmen</button>
+            </div>
+            <div *ngIf="list.volunteer_id != null && list.final_sum == null && authService.getCurrentUserRole() == 1 && authService.getCurrentUserId() == list.volunteer_id" class="volunteer-buttons">
+                <button (click)="dropVolunteer()" class="ui red button"><i class="close icon"></i> Liste abgeben</button>
+                <a [routerLink]="['../billing', list?.id]" class="ui button"><i class="euro sign icon"></i> Summe angeben</a>
+            </div>
+        </div>
+    </div>
+    <div class="twelve wide column" *ngIf="list">
+        <div class="ui vertical segment">
+            <h1 class="ui header">
+                Liste von {{list.creator.firstname}} {{list.creator.lastname}}
+                <div *ngIf="list.volunteer_id != null && list.final_sum != null" class="ui large basic green label">Erledigt</div>
+                <div *ngIf="list.volunteer_id != null && list.final_sum == null" class="ui large basic yellow label">Übernommen</div>
+                <div *ngIf="list.volunteer_id == null && list.final_sum == null" class="ui large basic red label">Offen</div>
+            </h1>
+            <div *ngIf="authService.isLoggedIn()
+                        && authService.getCurrentUserId() == list.volunteer_id
+                        || authService.getCurrentUserId() == list.creator_id;
+                        else minimized_address" class="full-address">
+                <b>Straße:</b> {{list.creator.addresses[0].street}} {{list.creator.addresses[0].number}}<br>
+                <b>Ort:</b> {{list.creator.addresses[0].postcode}} {{list.creator.addresses[0].location}}<br>
+            </div>
+            <ng-template #minimized_address>
+                <b>Ort:</b> {{list.creator.addresses[0].postcode}} {{list.creator.addresses[0].location}}<br>
+            </ng-template>
+            <b>Erstellt am:</b> {{list.created_at}}<br>
+            <b>Fällig am:</b> {{list.due_date}}
+        </div>
+        <div class="ui vertical segment">
+            <h2 class="ui header">Artikel</h2>
+
+            <table class="ui very basic table">
+                <thead>
+                <tr>
+                    <th class="six wide">Bezeichnung</th>
+                    <th class="three wide">Menge</th>
+                    <th class="three wide">Max. Preis</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of list.items">
+                        <td>{{item.name}}</td>
+                        <td>{{item.amount}}</td>
+                        <td>{{item.max_price}}€</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="list.final_sum != null" class="ui vertical segment">
+            <h2 class="ui header">Endsumme</h2>
+            <b>Summe:</b> {{list.final_sum}}€
+        </div>
+        <div class="ui vertical segment">
+            <h2 class="ui header">Kommentare</h2>
+            <div class="ui middle aligned divided list">
+                <div *ngIf="list.feedbacks.length == 0" class="item">
+                    <div class="content">
+                        <span class="header">Es gibt keine Kommentare zu dieser Liste.</span>
+                    </div>
+                </div>
+                <div *ngFor="let feedback of list.feedbacks" class="item">
+                    <div class="ui secondary segment">
+                        <div class="content">
+                            <div class="header">{{feedback.user.firstname}} {{feedback.user.lastname}}</div>
+                            <div class="extra">{{feedback.created_at}}</div><br>
+                            {{feedback.feedback_text}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <bs-shopping-list-comment-form *ngIf="authService.isLoggedIn()" (listChanged)="listChangedHandler(list)" [list]="list"></bs-shopping-list-comment-form>
+    </div>
+</div>
